@@ -2,12 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "semantic-ui-css/semantic.min.css";
 import App from "./App";
+import { FirebaseAuthProvider } from "./firebase/AuthenticationProvider";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <FirebaseAuthProvider>
+      <App />
+    </FirebaseAuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -3,12 +3,24 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import "./App.css";
+import { Login } from "./features/login/Login";
 import { Pokedex } from "./features/pokedex/Pokedex";
 import { Pokemon } from "./features/pokemon/Pokemon";
+import { AuthenticatedRoute } from "./_shared/AuthenticatedRoute";
 
 const queryClient = new QueryClient();
 
 const theme = {
+  app: {
+    common: {
+      white: "#ffffff",
+      black: "#000000",
+    },
+    primary: {
+      main: "#18314F", // prussian blue
+      light: "#EFF4FA",
+    },
+  },
   normal: {
     front: "#000000",
     back: "#E8E5DA",
@@ -89,8 +101,9 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <Router>
           <Switch>
-            <Route path="/" exact component={Pokedex} />
-            <Route path="/pokemon/:id" component={Pokemon} />
+            <Route path="/login" component={Login} />
+            <AuthenticatedRoute path="/" exact component={Pokedex} />
+            <AuthenticatedRoute path="/pokemon/:id" component={Pokemon} />
           </Switch>
         </Router>
       </QueryClientProvider>
