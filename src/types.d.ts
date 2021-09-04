@@ -1,5 +1,17 @@
 type APIPath = string;
 
+interface Pager<T> {
+  count: number;
+  next: string;
+  previous?: string;
+  results: Array<T>;
+}
+
+interface IPokedexEntry {
+  name: string;
+  url: string;
+}
+
 interface IAbility {
   effect_changes: Array<any>;
   effect_entries: Array<{

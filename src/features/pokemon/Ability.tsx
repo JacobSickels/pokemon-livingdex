@@ -6,8 +6,12 @@ import { capitalize } from "../../utils/utils";
 export const Ability = (props: { ability: IPokemonAbility }) => {
   const abilityId = props.ability.ability.url.split("/").slice(-2, -1)[0];
 
-  const { data } = useQuery<IAbility>(["abilities", abilityId], () =>
-    get<any>(`/ability/${abilityId}`)
+  const { data } = useQuery<IAbility>(
+    ["abilities", abilityId],
+    () => get<any>(`/ability/${abilityId}`),
+    {
+      enabled: false,
+    }
   );
 
   return (

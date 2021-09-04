@@ -5,10 +5,12 @@ import {
   Accordion,
   AccordionTitleProps,
   Card,
+  Container,
+  Grid,
+  Header,
   Icon,
   Image,
   Label,
-  Placeholder,
 } from "semantic-ui-react";
 import { get } from "../../utils/api";
 import { capitalize } from "../../utils/utils";
@@ -16,10 +18,16 @@ import { Abilities } from "./Abilities";
 import { Type } from "./Type";
 
 export const Pokemon = (props: any) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(-1);
+
   const id = props.match.params.id;
-  const { data, isLoading } = useQuery<IPokemon>(["pokemon", id], () =>
-    get<IPokemon>(`/pokemon/${id}`)
+  const { data, isLoading } = useQuery<IPokemon>(
+    ["pokemon", id],
+    () => get<IPokemon>(`/pokemon/${id}`),
+    {
+      cacheTime: 50000,
+      staleTime: 50000,
+    }
   );
 
   const handleClick = (e: any, data: AccordionTitleProps) => {
@@ -33,89 +41,63 @@ export const Pokemon = (props: any) => {
   };
 
   return (
-    <>
-      <Card>
-        {isLoading ? (
-          <Placeholder>
-            <Placeholder.Image square />
-          </Placeholder>
-        ) : (
-          <Image src={data?.sprites.front_default} wrapped ui={false} />
-        )}
-        <Card.Content>
-          <Card.Header style={{ paddingBottom: "0.5rem" }}>
-            {capitalize(data?.name)}
-            <Label style={{ float: "right" }}>
-              <Icon name="info circle" />
-              {data?.id}
-            </Label>
-          </Card.Header>
-          <Card.Meta>
-            {data?.types.map((type) => (
-              <Type type={type?.type?.name} />
-            ))}
-          </Card.Meta>
-        </Card.Content>
-        {/* <Card.Content extra>
-          {data?.types.map((type) => (
-            <Type type={type?.type?.name} />
-          ))}
-        </Card.Content> */}
-      </Card>
+    <Container>
+      <Grid padded>
+        <Grid.Row>
+          <Grid.Column width={12}>
+            <Header as="h1">{capitalize(data?.name)}</Header>
+            <Accordion>
+              <Accordion.Title
+                active={activeIndex === 0}
+                index={0}
+                onClick={handleClick}
+              >
+                <Icon name="dropdown" />
+                Abilities
+              </Accordion.Title>
+              <Accordion.Content active={activeIndex === 0}>
+                <Abilities abilities={data?.abilities || []} />
+              </Accordion.Content>
+            </Accordion>
+          </Grid.Column>
 
-      <Link to={`/pokemon/${parseInt(id, 10) + 1}`}>Next</Link>
+          <Grid.Column width={4}>
+            <Card>
+              <Image ui={true} src={data?.sprites.front_default} />
 
-      <Accordion>
-        <Accordion.Title
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          Abilities
-        </Accordion.Title>
-        <Accordion.Content active={activeIndex === 0}>
-          <Abilities abilities={data?.abilities || []} />
-        </Accordion.Content>
-
-        {/* <Accordion.Title
-          active={activeIndex === 1}
-          index={1}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          What kinds of dogs are there?
-        </Accordion.Title>
-        <Accordion.Content active={activeIndex === 1}>
-          <p>
-            There are many breeds of dogs. Each breed varies in size and
-            temperament. Owners often select a breed of dog that they find to be
-            compatible with their own lifestyle and desires from a companion.
-          </p>
-        </Accordion.Content>
-
-        <Accordion.Title
-          active={activeIndex === 2}
-          index={2}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          How do you acquire a dog?
-        </Accordion.Title>
-        <Accordion.Content active={activeIndex === 2}>
-          <p>
-            Three common ways for a prospective owner to acquire a dog is from
-            pet shops, private owners, or shelters.
-          </p>
-          <p>
-            A pet shop may be the most convenient way to buy a dog. Buying a dog
-            from a private owner allows you to assess the pedigree and
-            upbringing of your dog before choosing to take it home. Lastly,
-            finding your dog from a shelter, helps give a good home to a dog who
-            may not find one so readily.
-          </p>
-        </Accordion.Content> */}
-      </Accordion>
-    </>
+              <Card.Content>
+                <Card.Header style={{ paddingBottom: "0.5rem" }}>
+                  {capitalize(data?.name)}
+                  <Label style={{ float: "right" }}>
+                    # {data?.id.toString().padStart(3, "0")}
+                  </Label>
+                </Card.Header>
+                <Card.Meta>
+                  {data?.types.map((type) => (
+                    <Type type={type?.type?.name} />
+                  ))}
+                </Card.Meta>
+              </Card.Content>
+              <Card.Content extra>
+                <Link
+                  style={{ display: "inline-block" }}
+                  to={`/pokemon/${parseInt(id, 10) - 1}`}
+                >
+                  <Icon name="angle double left" />
+                  Previous
+                </Link>
+                <Link
+                  style={{ float: "right", display: "inline-block" }}
+                  to={`/pokemon/${parseInt(id, 10) + 1}`}
+                >
+                  Next
+                  <Icon name="angle double right" />
+                </Link>
+              </Card.Content>
+            </Card>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </Container>
   );
 };
