@@ -12,7 +12,7 @@ const StyledSegment = styled(Segment)`
 
 interface EntryProps {
   entry: IPokedexEntry;
-  onSelected: React.Dispatch<React.SetStateAction<number>>;
+  onSelected: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 export const Entry = (props: EntryProps) => {

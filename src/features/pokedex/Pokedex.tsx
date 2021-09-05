@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { createRef, useState } from "react";
 import { useInfiniteQuery } from "react-query";
-import { Grid } from "semantic-ui-react";
-import styled from "styled-components";
+import { Grid, Menu, Segment, Sidebar, Sticky } from "semantic-ui-react";
 import { useFirebaseAuth } from "../../firebase/AuthenticationProvider";
 import { list } from "../../utils/api";
 import { getUrlParams } from "../../utils/utils";
@@ -9,18 +8,10 @@ import { Button } from "../../_shared/Button";
 import { Pokemon } from "../pokemon/Pokemon";
 import { Entry } from "./Entry";
 
-const Sidebar = styled.div`
-  min-width: 24rem;
-  background-color: ${(props) => props.theme.app.primary.light};
-  height: 100vh;
-  position: fixed;
-  right: 0;
-`;
-
 export const Pokedex = (props: any) => {
-  const [selected, setSelected] = useState<number>(1);
+  const [selected, setSelected] = useState<number | null>(null);
   const user = useFirebaseAuth();
-  console.log(user);
+  const contextRef = createRef();
 
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery<Pager<IPokedexEntry>>(
@@ -40,40 +31,84 @@ export const Pokedex = (props: any) => {
 
   return (
     <>
-      <div style={{ display: "flex" }}>
-        <div style={{ flex: 1, marginRight: "24rem" }}>
-          <Grid columns={3} style={{ margin: "2rem", marginBottom: "1rem" }}>
-            {data?.pages.map((p) => (
-              <Grid.Row style={{ paddingTop: 0, paddingBottom: 0 }}>
-                {p.results.map((result) => (
-                  <Grid.Column style={{ marginBottom: "1rem" }}>
-                    <Entry
-                      key={result.name}
-                      entry={result}
-                      onSelected={setSelected}
-                    />
-                  </Grid.Column>
-                ))}
-              </Grid.Row>
-            ))}
-          </Grid>
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <Button
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
+      <Sidebar.Pushable style={{ position: "fixed" }}>
+        <Sticky>
+          <Sidebar
+            as={Menu}
+            animation="overlay"
+            direction="right"
+            icon="labeled"
+            vertical
+            style={{
+              position: "fixed",
+              backgroundColor: "#EFF4FA",
+            }}
+            visible={!!selected}
+          >
+            <div style={{ paddingTop: "5rem" }}>
+              <Pokemon id={selected} />
+              <Button onClick={() => setSelected(null)}>Close</Button>
+            </div>
+          </Sidebar>
+        </Sticky>
+
+        <Sidebar.Pusher style={{ overflow: "scroll", height: "100%" }}>
+          <Segment basic>
+            <Grid
+              style={{
+                margin: "2rem",
+                marginBottom: "1rem",
+                marginTop: "5rem",
+              }}
             >
-              {isFetchingNextPage
-                ? "Loading more..."
-                : hasNextPage
-                ? "Load More"
-                : "Nothing more to load"}
+              {data?.pages.map((p) => (
+                <Grid.Row style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  {p.results.map((result) => (
+                    <Grid.Column
+                      style={{ marginBottom: "1rem" }}
+                      mobile={16}
+                      tablet={8}
+                      computer={selected ? 5 : 4}
+                    >
+                      <Entry
+                        key={result.name}
+                        entry={result}
+                        onSelected={setSelected}
+                      />
+                    </Grid.Column>
+                  ))}
+                </Grid.Row>
+              ))}
+            </Grid>
+            <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+              <Button
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+              >
+                {isFetchingNextPage
+                  ? "Loading more..."
+                  : hasNextPage
+                  ? "Load More"
+                  : "Nothing more to load"}
+              </Button>
+            </div>
+          </Segment>
+        </Sidebar.Pusher>
+      </Sidebar.Pushable>
+
+      {/* {selected && (
+          <Sidebar>
+            <Button
+              icon
+              style={{ margin: "1rem" }}
+              onClick={() => setSelected(null)}
+            >
+              <Icon name="close" />
             </Button>
-          </div>
-        </div>
-        <Sidebar>
-          <Pokemon id={selected} />
-        </Sidebar>
-      </div>
+            <Pokemon id={selected} />
+          </Sidebar>
+        )} */}
+      {/* </div> */}
     </>
   );
 };

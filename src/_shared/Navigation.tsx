@@ -7,6 +7,9 @@ import { useFirebaseAuth } from "../firebase/AuthenticationProvider";
 const StyledNavigation = styled.nav`
   background-color: ${(props) => props.theme.app.primary.main};
   display: flex;
+  position: fixed;
+  width: 100vw;
+  z-index: 100;
 `;
 
 const StyledH1 = styled.h1`
@@ -28,10 +31,10 @@ export const Navigation = () => {
       <StyledH1>MyLivingDex</StyledH1>
       <Button
         icon="log out"
-        content={`Log out ${user?.email}`}
+        content={`Log out`}
         labelPosition="left"
         onClick={logout}
-        style={{ margin: "1rem" }}
+        style={{ margin: "1rem", marginRight: "2rem" }}
       />
     </StyledNavigation>
   );

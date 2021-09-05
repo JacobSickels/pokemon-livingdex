@@ -18,7 +18,11 @@ export const Pokemon = (props: any) => {
 
   return (
     <Card style={{ margin: "2rem" }}>
-      <Image ui={true} src={data?.sprites.front_default} />
+      <Image
+        ui={true}
+        src={data?.sprites.front_default}
+        style={{ alignItems: "flex-start" }}
+      />
 
       <Card.Content>
         <Card.Header style={{ paddingBottom: "0.5rem" }}>
