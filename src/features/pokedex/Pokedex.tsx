@@ -65,7 +65,7 @@ export const Pokedex = (props: any) => {
                       style={{ marginBottom: "1rem" }}
                       mobile={16}
                       tablet={8}
-                      computer={selected ? 5 : 4}
+                      computer={4}
                     >
                       <Entry
                         key={result.name}
