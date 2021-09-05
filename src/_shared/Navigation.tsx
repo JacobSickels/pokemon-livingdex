@@ -2,7 +2,6 @@ import { getAuth, signOut } from "@firebase/auth";
 import React from "react";
 import { Button } from "semantic-ui-react";
 import styled from "styled-components";
-import { useFirebaseAuth } from "../firebase/AuthenticationProvider";
 
 const StyledNavigation = styled.nav`
   background-color: ${(props) => props.theme.app.primary.main};
@@ -22,7 +21,6 @@ const StyledH1 = styled.h1`
 `;
 
 export const Navigation = () => {
-  const user = useFirebaseAuth();
   const auth = getAuth();
   const logout = () => signOut(auth);
 

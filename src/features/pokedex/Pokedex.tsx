@@ -1,7 +1,6 @@
-import React, { createRef, useState } from "react";
+import React, { useState } from "react";
 import { useInfiniteQuery } from "react-query";
 import { Grid, Menu, Segment, Sidebar, Sticky } from "semantic-ui-react";
-import { useFirebaseAuth } from "../../firebase/AuthenticationProvider";
 import { list } from "../../utils/api";
 import { getUrlParams } from "../../utils/utils";
 import { Button } from "../../_shared/Button";
@@ -10,8 +9,6 @@ import { Entry } from "./Entry";
 
 export const Pokedex = (props: any) => {
   const [selected, setSelected] = useState<number | null>(null);
-  const user = useFirebaseAuth();
-  const contextRef = createRef();
 
   const { data, isFetchingNextPage, hasNextPage, fetchNextPage } =
     useInfiniteQuery<Pager<IPokedexEntry>>(
