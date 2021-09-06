@@ -31,7 +31,7 @@ const FirebasePokedexProvider = ({
     });
 
     return () => {};
-  }, [user]);
+  }, [user, database]);
 
   return (
     <FirebasePokedexContext.Provider value={value}>
