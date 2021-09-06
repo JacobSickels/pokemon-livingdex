@@ -7,6 +7,7 @@ const StyledLabel = styled.div<{ type: string }>`
   border-radius: 4px;
   line-height: 1rem;
   font-size: 1rem;
+  margin-right: 0.5rem;
   color: ${(props) => props.theme[props.type]?.front};
   background-color: ${(props) => props.theme[props.type]?.back};
 `;

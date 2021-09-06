@@ -3,13 +3,16 @@ import ReactDOM from "react-dom";
 import "semantic-ui-css/semantic.min.css";
 import App from "./App";
 import { FirebaseAuthProvider } from "./firebase/AuthenticationProvider";
+import { FirebasePokedexProvider } from "./firebase/PokedexProvider";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
     <FirebaseAuthProvider>
-      <App />
+      <FirebasePokedexProvider>
+        <App />
+      </FirebasePokedexProvider>
     </FirebaseAuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
